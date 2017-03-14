@@ -7,7 +7,6 @@
 
 #include <avr/io.h>
 #include <avr/pgmspace.h>
-#include <avr/wdt.h>
 #include <stdio.h>
 #include <util/delay.h>
 #include <avr/interrupt.h>
@@ -21,19 +20,6 @@
 
 unsigned int Counter = 0;        //Count of tested modules.
 
-/*
-uint8_t mcusr_mirror __attribute__ ((section (".noinit")));
-
-void get_mcusr(void) \
-__attribute__((naked)) \
-__attribute__((section(".init3")));
-void get_mcusr(void)
-{
-	mcusr_mirror = MCUSR;
-	MCUSR = 0;
-	wdt_disable();
-}
-*/
 void TwoLedsBlinks (unsigned char Number)
 {
 	LED_RED_OFF;
@@ -117,7 +103,7 @@ unsigned char ModulePresenceCheck (void)
 void SendMainLine (void)
 {
 	printf_P(PSTR("\n\r\n\r<<< AS-P-1-15-A tester. Program version: "));
-	printf(ProgrammVer);
+	printf_P(ProgrammVer);
 	printf_P(PSTR(">>>\n\r"));
 }
 
@@ -281,16 +267,16 @@ unsigned char TestModule(void)
 	unsigned int Leakage_2to3;
 	unsigned char ERRCode;
 	
-	printf_P(PSTR("TestModule(void)\n\r"));
+	printf_P(PSTR("------------------------------------------------\n\r"));
 	
 	/*  Presence checking  */
 
-	//if (ModulePresenceCheck() == _false) return _false;
+	if (ModulePresenceCheck() == _false) return _false;
 	
 	/*  Breakdown checking  */
 	// default path and voltage used in main cycle
 	Breakdown_1to4 = ADC_get_Breakdown_mV();
-	printf_P(PSTR("ADC_get_Breakdown_mV() passed\n\r"));
+	
 	USE_2to3_PATH;
 	_delay_ms(200);
 	Breakdown_2to3 = ADC_get_Breakdown_mV();
@@ -351,21 +337,11 @@ void HWInit(void)
 	stdio_io_init();
 	ADC_INIT();
 	AdjustedVoltage37 = ReadAdjustedVoltage37();   //Read saved voltage that used for Breakdown checking
-	//wdt_enable(WDTO_4S);
 }
 
 int main(void)
 {
     HWInit();
-	
-	uint8_t mcusr_mirror;
-	mcusr_mirror = MCUSR;
-	MCUSR = 0;
-	
-	printf_P(PSTR("MCUSR: %x\n\r"), mcusr_mirror);
-	mcusr_mirror = MCUSR;
-	printf_P(PSTR("Reseted MCUSR: %x\n\r"), mcusr_mirror);
-	
 	
 	printf_P(PSTR("-------------------------\n\r"));
 	printf_P(PSTR("Hardware are united\n\r"));
