@@ -9,7 +9,7 @@
 #ifndef MAIN_H_
 #define MAIN_H_
 
-#define ProgrammVer  "1.03"
+#define ProgrammVer  "2.00"
 
 #define _true    1
 #define _false   0

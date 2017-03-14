@@ -100,11 +100,9 @@ unsigned char ModulePresenceCheck (void)
 	return _true;
 }
 
-void SendMainLine (void)
+void SendVersionLine (void)
 {
-	printf_P(PSTR("\n\r\n\r<<< AS-P-1-15-A tester. Program version: "));
-	printf_P(ProgrammVer);
-	printf_P(PSTR(">>>\n\r"));
+	printf_P(PSTR("\n\r\n\r<<< AS-P-1-15-A tester. Program version: %s>>>\n\r"),ProgrammVer);
 }
 
 
@@ -120,7 +118,7 @@ unsigned char  WaitCommand(void)
 		}
 		
 		if ((InputSymbol == 'H')||(InputSymbol == 'h')){  //Help
-			SendMainLine();
+			SendVersionLine();
 			printf_P(PSTR("Help list:\n\r"));
 			printf_P(PSTR("   'H' This help;\n\r"));
 			printf_P(PSTR("   'S' Start testing;\n\r"));
@@ -137,33 +135,33 @@ unsigned char  WaitCommand(void)
 		
 		if ((InputSymbol == 'R')||(InputSymbol == 'r')){  //Reset
 			Counter = 0;
-			SendMainLine();
+			SendVersionLine();
 			printf_P(PSTR("Counter of tested modules was reseted.\n\r"));
 			return _false;
 		}
 		
 		if (InputSymbol == '+'){  //Increment
 			if (Counter < 0xFFFF) Counter++;
-			SendMainLine();
+			SendVersionLine();
 			printf_P(PSTR("Counter was incremented by 1. New value: %d\n\r"), Counter);
 			return _false;
 		}
 		
 		if (InputSymbol == '-'){  //Decrement
 			if (Counter > 0) Counter--;
-			SendMainLine();
+			SendVersionLine();
 			printf_P(PSTR("Counter was decremented by 1. New value: %d\n\r"), Counter);
 			return _false;
 		}
 		
 		if ((InputSymbol == 'C')||(InputSymbol == 'c')){  //Show counter
-			SendMainLine();
+			SendVersionLine();
 			printf_P(PSTR("Counter value: %d\n\r"), Counter);
 			return _false;
 		}
 		
 		if (InputSymbol == '_'){  //Show adjusted voltage
-			SendMainLine();
+			SendVersionLine();
 			if ((ReadAdjustedVoltage37() < 3500L)||(ReadAdjustedVoltage37() > 4000L)){   // If saved voltage less than 35.00V
 				SaveAdjustedVoltage37(3700L); // Set defoult voltage 37.0V for the first programm start
 			}
@@ -175,7 +173,7 @@ unsigned char  WaitCommand(void)
 		}
 		
 		if (InputSymbol == '>') {  //Increment voltage
-			SendMainLine();
+			SendVersionLine();
 			AdjustedVoltage37 = ReadAdjustedVoltage37();
 			if (AdjustedVoltage37 < 4000L) {
 				AdjustedVoltage37++;
@@ -188,7 +186,7 @@ unsigned char  WaitCommand(void)
 		}
 		
 		if (InputSymbol == '<') {  //Decrement voltage
-			SendMainLine();
+			SendVersionLine();
 			AdjustedVoltage37 = ReadAdjustedVoltage37();
 			if (AdjustedVoltage37 > 3500) {
 				AdjustedVoltage37--;
@@ -342,11 +340,7 @@ void HWInit(void)
 int main(void)
 {
     HWInit();
-	
-	printf_P(PSTR("-------------------------\n\r"));
-	printf_P(PSTR("Hardware are united\n\r"));
-	printf_P(PSTR("-------------------------\n\r"));
-	
+	SendVersionLine();
 	TwoLedsBlinks(10);
 	sei();
 	
@@ -354,7 +348,7 @@ int main(void)
     {
 		while (BUTTON_IS_UNPRESSED) {if (WaitCommand() == _true) break;}  //wait while button Start will pressed or Start command will be recived
 		TwoLedsBlinks(3);
-		SendMainLine();
+		SendVersionLine();
     
 		if (TestModule() == _true){
 			Counter++;
