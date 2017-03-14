@@ -14,6 +14,7 @@
 #include "macros.h"
 #include <avr/interrupt.h>
 #include <avr/sfr_defs.h>
+#include <util/delay.h>
 
 unsigned char SymbolRecived = _false;
 unsigned char InputSymbol;
@@ -47,5 +48,6 @@ int stdio_io_putchar(char data)
 {
 	loop_until_bit_is_set(UCSR0A, UDRE0);
 	UDR0 = data;
+	_delay_ms(1);
 	return 0;
 }
