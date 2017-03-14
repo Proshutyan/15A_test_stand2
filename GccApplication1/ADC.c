@@ -10,6 +10,7 @@
 #include <util/delay.h>
 #include <avr/sfr_defs.h>
 #include <avr/sleep.h>
+#include <avr/interrupt.h>
 #include "main.h"
 #include "adc.h"
 #include "macros.h"
@@ -42,6 +43,11 @@ void ADC_INIT (void)
 	ADCSRA |= (1<<ADIE);
 	_delay_ms(10);
 }
+
+ISR(ADC_vect)
+{
+	asm("nop");
+};
 
 void ADCStartConversion (void)
 {
