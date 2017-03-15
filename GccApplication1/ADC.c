@@ -36,7 +36,7 @@ void ADC_INIT (void)
 	ADCSRA = 0x00;  //Swt off ADC
 	_delay_ms(10);
 	USE_P_ADC2_N_ADC2_G_1_V_256;
-	ADCSRA = (1<<ADEN) | (1<<ADPS2)| (1<<ADPS0);    //Enable ADC in Single Conversion mode with prescale by 32 (115.2 kHz) with interrupt
+	ADCSRA = (1<<ADEN) | (1<<ADPS2)| (1<<ADPS0);    //Enable ADC in Single Conversion mode with prescale by 32 (115.2 kHz from F_CPU=3686400)  with interrupt
 	SET(ADCSRA,ADIF);
 	SET(ADCSRA,ADSC);  // Start Conversion
 	loop_until_bit_is_set(ADCSRA,ADIF);          //Perform first conversion
