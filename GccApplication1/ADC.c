@@ -16,6 +16,7 @@
 #include "adc.h"
 #include "macros.h"
 
+//#define _2_56V 2470L //  //Real value for the first device
 #define _2_56V 2463L   //Real value for my uC in mV.
 
 #define USE_P_ADC3_N_ADC2_G_10_V_256     ADMUX = (1<<REFS1) | (1<<REFS0) | (0<<MUX4) | (1<<MUX3) | (1<<MUX2) | (0<<MUX1) | (1<<MUX0)
