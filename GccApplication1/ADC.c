@@ -16,7 +16,7 @@
 #include "adc.h"
 #include "macros.h"
 
-#define _2_56V 2470L   //Real value for my uC in mV.
+#define _2_56V 2463L   //Real value for my uC in mV.
 
 #define USE_P_ADC3_N_ADC2_G_10_V_256     ADMUX = (1<<REFS1) | (1<<REFS0) | (0<<MUX4) | (1<<MUX3) | (1<<MUX2) | (0<<MUX1) | (1<<MUX0)
 //  //Select Internal 2.56V Voltage Reference EXternal bypass and enable RIGHT-Adjust
@@ -65,18 +65,18 @@ unsigned int ADC_get_Breakdown_mV (void)
 	_delay_ms(10);
 	ADCStartConversion();
 	Offset = ADC; //Get Offset value
-	  //printf_P(PSTR("\n\r***************\n\rOffset: %d\n\r"), Offset);
+	  //printf_P(PSTR("\n\r***************\n\rOffset: DEC=%d, HEX=%x\n\r"), Offset, Offset);
 	
 	USE_P_ADC3_N_ADC2_G_1_V_256;  //Analog inputs for data measuring
 	_delay_ms(10);
 	ADCStartConversion();
 	TempADC = ADC; //Get value
 	TempADC = TempADC & 0x1FF;
-	 //printf_P(PSTR("TempADC: %d\n\r"), TempADC);
+	 //printf_P(PSTR("TempADC: DEC=%d, HEX=%x\n\r"), TempADC,TempADC);
 	
 	if (TempADC > Offset) TempADC = TempADC - Offset;  //Offset compensation
 	else TempADC = 0;
-	  //printf_P(PSTR("TempADC - Offset: %d\n\r"), TempADC);
+	  //printf_P(PSTR("TempADC - Offset: DEC=%d, HEX=%x\n\r"), TempADC, TempADC);
 
 	TempADC = div_round(TempADC * _2_56V, 512L);
 	  //printf_P(PSTR("Voltage TempADC: %d\n\r***************\n\r\n\r"), TempADC);
@@ -95,18 +95,18 @@ unsigned int ADC_get_Leakage_mV (void)
 	_delay_ms(10);
 	ADCStartConversion();
 	Offset = ADC; //Get Offset value
-	//  printf_P(PSTR("\n\r***************\n\rOffset: %d\n\r"), Offset);
+	//  printf_P(PSTR("\n\r***************\n\rOffset: DEC=%d, HEX=%x\n\r"), Offset, Offset);
 	
 	USE_P_ADC3_N_ADC2_G_10_V_256; //Analog inputs for data measuring gain = 10
 	_delay_ms(10);
 	ADCStartConversion();
 	TempADC = ADC; //Get value
 	TempADC = TempADC & 0x1FF;
-	//  printf_P(PSTR("TempADC: %d\n\r"), TempADC);
+	//  printf_P(PSTR("TempADC: DEC=%d, HEX=%x\n\r"), TempADC,TempADC);
 	
 	if (TempADC > Offset) TempADC = TempADC - Offset;  //Offset compensation
 	else TempADC = 0;
-	//  printf_P(PSTR("TempADC - Offset: %d\n\r"), TempADC);
+	//  printf_P(PSTR("TempADC - Offset: DEC=%d, HEX=%x\n\r"), TempADC, TempADC);
 
 	TempADC = div_round(TempADC * _2_56V, 512L);
 	//  printf_P(PSTR("Voltage TempADC: %d\n\r***************\n\r\n\r"), TempADC);
