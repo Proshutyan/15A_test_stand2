@@ -60,8 +60,16 @@ void SendTestNotPased (void)
 	printf_P(PSTR("TEST: Failed!!!\n\r"));
 }
 
+unsigned char CalibrationModulePresenceCheck (void)
+{
+	if (MODULE_NOT_INSERTED) {
+		printf_P(PSTR("To get reliable result insert workable module!\n\r"));
+		return _false;
+	}
+	return _true;
+}
 
-unsigned char  WaitCommand(void)
+unsigned char  WaitCommand (void)
 {
 	if (SymbolRecived == _true){
 		SymbolRecived = _false;
@@ -129,7 +137,7 @@ unsigned char  WaitCommand(void)
 			AdjustedVoltage36 = ReadAdjustedVoltage36();
 			printf_P(PSTR("Voltage for breakdown testing:"));
 			ShowVoltage(AdjustedVoltage36);
-			ModulePresenceCheck();
+			CalibrationModulePresenceCheck();
 			return _false;
 		}
 		
@@ -142,7 +150,7 @@ unsigned char  WaitCommand(void)
 			}
 			printf_P(PSTR("Voltage for breakdown testing incremented by 0.01V.\n\rNew value:"));
 			ShowVoltage(ReadAdjustedVoltage36());
-			ModulePresenceCheck();
+			CalibrationModulePresenceCheck();
 			return _false;
 		}
 		
@@ -155,7 +163,7 @@ unsigned char  WaitCommand(void)
 			}
 			printf_P(PSTR("Voltage for breakdown testing decremented by 0.01V.\n\rNew value:"));
 			ShowVoltage(ReadAdjustedVoltage36());
-			ModulePresenceCheck();
+			CalibrationModulePresenceCheck();
 			return _false;
 		}
 	}
