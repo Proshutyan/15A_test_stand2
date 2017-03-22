@@ -9,12 +9,12 @@
 #ifndef MAIN_H_
 #define MAIN_H_
 
-#define ProgrammVer  PSTR("2.00")
+#define ProgrammVer  "2.00"
 
 #ifdef DEVICE1
-#define DeviceVer PSTR("DEVICE1 (the first device with the battery 36V power, it needs to be adjusted each time when started and when works)")
+#define DeviceVer "DEVICE1 (the first device with the battery 36V power).\n\rIt needs to be adjusted each time when started and when works"
 #elif DEVICE2
-#define DeviceVer PSTR("DEVICE2 (the second device with the transformer 36V power, it needs to be checked each time when started)")
+#define DeviceVer "DEVICE2 (the second device with the transformer 36V power).\n\rIt needs to be checked each time when started"
 #else
 #  error "Serial number is not defined"
 #endif

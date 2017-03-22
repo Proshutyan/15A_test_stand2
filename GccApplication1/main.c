@@ -20,6 +20,7 @@
 #include "test.h"
 #include "menu.h"
 
+
 void TwoLedsBlinks (unsigned char Number)
 {
 	LED_RED_OFF;

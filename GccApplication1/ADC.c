@@ -56,29 +56,29 @@ void ADCStartConversion (void)
 
 unsigned int ADC_get_Breakdown_mV (void)
 {
-	signed int Offset;
-	signed int TempADC;
+	int16_t  Offset;
+	int16_t  TempADC;
 	
 	USE_P_ADC2_N_ADC2_G_1_V_256;  //Analog inputs for offset measuring
 	_delay_ms(10);
 	ADCStartConversion();
-	Offset = ADC; //Get Offset value
-	//Offset = 0;
-	  printf_P(PSTR("\n\r***************\n\rOffset: DEC=%d, HEX=%x\n\r"), Offset, Offset);
+	if (ADC > 0x1ff) Offset = ADC + 0xFC00;  //If offset is negative make var negative by adding 0xFC00
+	else Offset = ADC;                       //Get Offset value
+	  //printf_P(PSTR("\n\r***************\n\rOffset: DEC=%d, HEX=%x\n\r"), (int16_t)Offset, Offset);
 	
 	USE_P_ADC3_N_ADC2_G_1_V_256;  //Analog inputs for data measuring
 	_delay_ms(10);
 	ADCStartConversion();
-	TempADC = ADC; //Get value
-	TempADC = TempADC & 0x1FF;
-	 printf_P(PSTR("TempADC: DEC=%d, HEX=%x\n\r"), TempADC,TempADC);
+	if (ADC > 0x1ff) TempADC = ADC + 0xFC00;  //If offset is negative make var negative by adding 0xFC00
+	else TempADC = ADC;                       //Get Offset value
+	  //printf_P(PSTR("TempADC: DEC=%d, HEX=%x\n\r"), TempADC,TempADC);
 	
-	if (TempADC > Offset) TempADC = TempADC - Offset;  //Offset compensation
-	else TempADC = 0;
-	  printf_P(PSTR("TempADC - Offset: DEC=%d, HEX=%x\n\r"), TempADC, TempADC);
+	TempADC = TempADC - Offset;
+	if (TempADC < 0) TempADC = 0;  //If Offset bigger than TempADC to avoid negative results when zero-voltage
+	  //printf_P(PSTR("TempADC - Offset: DEC=%d, HEX=%x\n\r"), TempADC, TempADC);
 
 	TempADC = div_round(TempADC * _2_56V, 512L);
-	  printf_P(PSTR("Voltage TempADC: %d\n\r***************\n\r\n\r"), TempADC);
+	  //printf_P(PSTR("Voltage TempADC: %d\n\r***************\n\r\n\r"), TempADC);
 	
 	return TempADC;
 }
@@ -87,28 +87,32 @@ unsigned int ADC_get_Breakdown_mV (void)
 
 unsigned int ADC_get_Leakage_mV (void)
 {
-	unsigned int Offset;
-	unsigned int TempADC;
+	int16_t  Offset;
+	int16_t  TempADC;
 	
 	USE_P_ADC2_N_ADC2_G_10_V_256;  //Analog inputs for offset measuring gain = 10
 	_delay_ms(10);
 	ADCStartConversion();
-	Offset = ADC; //Get Offset value
-	//  printf_P(PSTR("\n\r***************\n\rOffset: DEC=%d, HEX=%x\n\r"), Offset, Offset);
+	if (ADC > 0x1ff) Offset = ADC + 0xFC00;  //If offset is negative make var negative by adding 0xFC00
+	else Offset = ADC;                       //Get Offset value
+	
+	//Offset = 1;
+	
+	  printf_P(PSTR("\n\r***************\n\rOffset: DEC=%d, HEX=%x\n\r"), (int16_t)Offset, Offset);
 	
 	USE_P_ADC3_N_ADC2_G_10_V_256; //Analog inputs for data measuring gain = 10
 	_delay_ms(10);
 	ADCStartConversion();
-	TempADC = ADC; //Get value
-	TempADC = TempADC & 0x1FF;
-	//  printf_P(PSTR("TempADC: DEC=%d, HEX=%x\n\r"), TempADC,TempADC);
+	if (ADC > 0x1ff) TempADC = ADC + 0xFC00;  //If offset is negative make var negative by adding 0xFC00
+	else TempADC = ADC;                       //Get Offset value	
+	  printf_P(PSTR("TempADC: DEC=%d, HEX=%x\n\r"), TempADC,TempADC);
 	
-	if (TempADC > Offset) TempADC = TempADC - Offset;  //Offset compensation
-	else TempADC = 0;
-	//  printf_P(PSTR("TempADC - Offset: DEC=%d, HEX=%x\n\r"), TempADC, TempADC);
+	TempADC = TempADC - Offset;
+	if (TempADC < 0) TempADC = 0;  //If Offset bigger than TempADC to avoid negative results when zero-leakage
+	  printf_P(PSTR("TempADC - Offset: DEC=%d, HEX=%x\n\r"), TempADC, TempADC);
 
 	TempADC = div_round(TempADC * _2_56V, 512L);
-	//  printf_P(PSTR("Voltage TempADC: %d\n\r***************\n\r\n\r"), TempADC);
+	  printf_P(PSTR("Voltage TempADC: %d\n\r***************\n\r\n\r"), TempADC);
 	
 	return TempADC;
 }
