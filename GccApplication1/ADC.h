@@ -12,7 +12,7 @@
 #ifdef DEVICE1
 #define _2_56V 2470L  //Real value for the first device
 #elif DEVICE2
-#define _2_56V 2463L   //Real value for the second device in mV.
+#define _2_56V 2448L   //Real value for the second device in mV.
 #else 
 #  error "Serial number is not defined"
 #endif

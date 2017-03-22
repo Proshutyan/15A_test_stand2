@@ -56,28 +56,29 @@ void ADCStartConversion (void)
 
 unsigned int ADC_get_Breakdown_mV (void)
 {
-	unsigned int Offset;
-	unsigned int TempADC;
+	signed int Offset;
+	signed int TempADC;
 	
 	USE_P_ADC2_N_ADC2_G_1_V_256;  //Analog inputs for offset measuring
 	_delay_ms(10);
 	ADCStartConversion();
 	Offset = ADC; //Get Offset value
-	  //printf_P(PSTR("\n\r***************\n\rOffset: DEC=%d, HEX=%x\n\r"), Offset, Offset);
+	//Offset = 0;
+	  printf_P(PSTR("\n\r***************\n\rOffset: DEC=%d, HEX=%x\n\r"), Offset, Offset);
 	
 	USE_P_ADC3_N_ADC2_G_1_V_256;  //Analog inputs for data measuring
 	_delay_ms(10);
 	ADCStartConversion();
 	TempADC = ADC; //Get value
 	TempADC = TempADC & 0x1FF;
-	 //printf_P(PSTR("TempADC: DEC=%d, HEX=%x\n\r"), TempADC,TempADC);
+	 printf_P(PSTR("TempADC: DEC=%d, HEX=%x\n\r"), TempADC,TempADC);
 	
 	if (TempADC > Offset) TempADC = TempADC - Offset;  //Offset compensation
 	else TempADC = 0;
-	  //printf_P(PSTR("TempADC - Offset: DEC=%d, HEX=%x\n\r"), TempADC, TempADC);
+	  printf_P(PSTR("TempADC - Offset: DEC=%d, HEX=%x\n\r"), TempADC, TempADC);
 
 	TempADC = div_round(TempADC * _2_56V, 512L);
-	  //printf_P(PSTR("Voltage TempADC: %d\n\r***************\n\r\n\r"), TempADC);
+	  printf_P(PSTR("Voltage TempADC: %d\n\r***************\n\r\n\r"), TempADC);
 	
 	return TempADC;
 }
