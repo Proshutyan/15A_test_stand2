@@ -17,8 +17,6 @@
 #include "UART_STR.h"
 #include "menu.h"
 
-unsigned int Counter = 0;        //Count of tested modules.
-
 void ShowVoltage (unsigned int ucData)
 {
 	unsigned char High, low;
@@ -48,7 +46,6 @@ void SendDeviceVersionLine (void)
 
 void SendModuleTestPassed (void)
 {
-	Counter++;
 	printf_P(PSTR("COUNTER: %d\n\r"), Counter);
 	printf_P(PSTR("-------------------------\n\r"));
 	printf_P(PSTR("TEST: Passed Successfully.\n\r"));
@@ -69,15 +66,19 @@ unsigned char CalibrationModulePresenceCheck (void)
 	return _true;
 }
 
-unsigned char  WaitCommand (void)
+char  WaitCommand (void)
 {
 	if (SymbolRecived == _true){
 		SymbolRecived = _false;
 		printf_P(PSTR("\n\r>"));          //print '>' simbol
 		putchar (InputSymbol);
 
-		if ((InputSymbol == 'S')||(InputSymbol == 's')){  //Start
-			return _true;  //make start
+		if ((InputSymbol == 'S')||(InputSymbol == 's')){  //Start and count
+			return _start_and_count;  //make start
+		}
+		
+		if ((InputSymbol == 'R')||(InputSymbol == 'r')){  //Start without count (Re-check)
+			return _restart_wo_count;  //make start
 		}
 		
 		if ((InputSymbol == 'H')||(InputSymbol == 'h')){  //Help
@@ -85,9 +86,10 @@ unsigned char  WaitCommand (void)
 			printf_P(PSTR("Help list:\n\r"));
 			printf_P(PSTR("   'H' This help;\n\r"));
 			printf_P(PSTR("   'V' Device and program version;\n\r"));
-			printf_P(PSTR("   'S' Start testing;\n\r"));
+			printf_P(PSTR("   'S' Start testing and count;\n\r"));
+			printf_P(PSTR("   'R' Restart testing without count;\n\r"));			
 			printf_P(PSTR("   'C' Show counter of tested modules;\n\r"));
-			printf_P(PSTR("   'R' Reset counter of tested modules;\n\r"));
+			printf_P(PSTR("   'N' Reset counter of tested modules;\n\r"));
 			printf_P(PSTR("   '+' Increment counter by +1;\n\r"));
 			printf_P(PSTR("   '-' Decrement counter by -1;\n\r"));
 			printf_P(PSTR("   '_' Show voltage for breakdown testing saved in EEPROM;\n\r"));
@@ -102,7 +104,7 @@ unsigned char  WaitCommand (void)
 			SendDeviceVersionLine();
 		}
 		
-		if ((InputSymbol == 'R')||(InputSymbol == 'r')){  //Reset
+		if ((InputSymbol == 'N')||(InputSymbol == 'n')){  //Reset
 			Counter = 0;
 			SendVersionLine();
 			printf_P(PSTR("Counter of tested modules was reseted.\n\r"));
@@ -131,7 +133,7 @@ unsigned char  WaitCommand (void)
 		
 		if (InputSymbol == '_'){  //Show adjusted voltage
 			SendVersionLine();
-			if ((ReadAdjustedVoltage36() < 3500L)||(ReadAdjustedVoltage36() > 4000L)){   // If saved voltage less than 35.00V
+			if ((ReadAdjustedVoltage36() < 3350L)||(ReadAdjustedVoltage36() > 4000L)){   // If saved voltage less than 35.00V
 				SaveAdjustedVoltage36(3700L); // Set defoult voltage 37.0V for the first programm start
 			}
 			AdjustedVoltage36 = ReadAdjustedVoltage36();

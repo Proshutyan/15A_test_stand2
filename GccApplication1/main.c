@@ -20,6 +20,7 @@
 #include "test.h"
 #include "menu.h"
 
+unsigned int Counter = 0;        //Count of tested modules.
 
 void TwoLedsBlinks (unsigned char Number)
 {
@@ -55,13 +56,23 @@ int main(void)
 	TwoLedsBlinks(10);
 	sei();
 	
+	char Command = _false;
     while (1) 
     {
-		while (BUTTON_IS_UNPRESSED) {if (WaitCommand() == _true) break;}  //wait while button Start will pressed or Start command will be recived
+		while (1) {
+			Command = WaitCommand();
+			if (BUTTON_IS_PRESSED) {
+				_delay_ms(20); //denounce
+				if (BUTTON_IS_PRESSED) Command = _start_and_count;
+			}
+			if (Command != _false) break;
+		}  //wait while button Start will pressed or Start command will be received
+		
 		TwoLedsBlinks(3);
 		SendVersionLine();
     
 		if (TestModule() == _true){
+			if (Command == _start_and_count) Counter++;
 			SendModuleTestPassed();
 			LED_GREEN_ON;
 		}

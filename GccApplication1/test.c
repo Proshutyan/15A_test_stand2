@@ -114,10 +114,10 @@ unsigned char TestModule(void)
 	
 	ERRCode = 0;
 	
-	if (Breakdown_1to4 < 2850L) ERRCode |= 0x01;  //Shortcut or low breakdown voltage on path 1to4
-	if (Breakdown_2to3 < 2850L) ERRCode |= 0x02;  //Shortcut or low breakdown voltage on path 2to3
-	if (Breakdown_1to4 > 3150L) ERRCode |= 0x04;  //Broken wire or high breakdown voltage on path 1to4
-	if (Breakdown_2to3 > 3150L) ERRCode |= 0x08;  //Broken wire or high breakdown voltage on path 2to3
+	if (Breakdown_1to4 < 2835L) ERRCode |= 0x01;  //Shortcut or low breakdown voltage on path 1to4
+	if (Breakdown_2to3 < 2835L) ERRCode |= 0x02;  //Shortcut or low breakdown voltage on path 2to3
+	if (Breakdown_1to4 > 3165L) ERRCode |= 0x04;  //Broken wire or high breakdown voltage on path 1to4
+	if (Breakdown_2to3 > 3165L) ERRCode |= 0x08;  //Broken wire or high breakdown voltage on path 2to3
 	
 	if (BreakdownAnalyze(ERRCode) == _false) return _false; //Checking Breakdown voltages and Analyze it
 	

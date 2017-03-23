@@ -19,9 +19,10 @@
 #  error "Serial number is not defined"
 #endif
 
+unsigned int Counter;
+
 #define _true    1
 #define _false   0
-
 
 #define LEDPORT  PORTD
 #define LEDDIR   DDRD
