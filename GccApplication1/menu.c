@@ -157,7 +157,7 @@ unsigned char  WaitCommand (void)
 		if (InputSymbol == '<') {  //Decrement voltage
 			SendVersionLine();
 			AdjustedVoltage36 = ReadAdjustedVoltage36();
-			if (AdjustedVoltage36 > 3500) {
+			if (AdjustedVoltage36 > 3350) {
 				AdjustedVoltage36--;
 				SaveAdjustedVoltage36(AdjustedVoltage36);
 			}
