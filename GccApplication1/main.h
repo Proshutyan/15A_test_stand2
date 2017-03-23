@@ -9,7 +9,7 @@
 #ifndef MAIN_H_
 #define MAIN_H_
 
-#define ProgrammVer  "2.00"
+#define ProgrammVer  "2.01"
 
 #ifdef DEVICE1
 #define DeviceVer "DEVICE1 (the first device with the battery 36V power).\n\rIt needs to be adjusted each time when started and when works"
